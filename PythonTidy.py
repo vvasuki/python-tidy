@@ -304,8 +304,8 @@ APOST = "'"
 # Old code is parsed.  New code is generated from the parsed version,
 # using these literals:
 
-COL_LIMIT = 72
-INDENTATION = '    '
+COL_LIMIT = 78
+INDENTATION = '  '
 ASSIGNMENT = ' = '
 FUNCTION_PARAM_ASSIGNMENT = '='
 FUNCTION_PARAM_SEP = ', '
@@ -333,7 +333,7 @@ DOUBLE_QUOTED_STRINGS = False  # 2006 Dec 05
 SINGLE_QUOTED_STRINGS = False  # 2007 May 01
 RECODE_STRINGS = False  # 2006 Dec 01
 OVERRIDE_NEWLINE = None  # 2012 Mar 04
-CAN_SPLIT_STRINGS = False  # 2007 Mar 06
+CAN_SPLIT_STRINGS = True  # 2007 Mar 06
 DOC_TAB_REPLACEMENT = '....'  # 2007 May 24
 KEEP_UNASSIGNED_CONSTANTS = False  # 2010 Mar 10
 PARENTHESIZE_TUPLE_DISPLAY = True  # 2010 Mar 10
@@ -394,16 +394,6 @@ def munge(str, **attribs):
     return '<*%s*>' % str
 
 
-def substitutions(str, **attribs):
-    result = SUBSTITUTE_FOR.get(str, str)
-    module = attribs.get('module')  # 2006 Dec 19
-    if module is None:
-        pass
-    else:
-        result = SUBSTITUTE_FOR.get('%s.%s' % (module, str), result)
-    return result
-
-
 def elide_c(str, **attribs):
     return ELIDE_C_PATTERN.sub('\\1', str)
 
@@ -444,19 +434,6 @@ ATTR_NAME_SCRIPT = []
                              # fear of changing those of classes
                              # defined in other modules.
 
-# Author's preferences:
-
-if PERSONAL:
-    LEFTJUST_DOC_STRINGS = True
-    LOCAL_NAME_SCRIPT.extend([unmangle, camel_case_to_underscore])
-    GLOBAL_NAME_SCRIPT.extend([unmangle, camel_case_to_underscore, 
-                              all_upper_case])
-    CLASS_NAME_SCRIPT.extend([elide_c, underscore_to_camel_case])
-    FUNCTION_NAME_SCRIPT.extend([camel_case_to_underscore])
-    FORMAL_PARAM_NAME_SCRIPT.extend([elide_a, camel_case_to_underscore])
-    ATTR_NAME_SCRIPT.extend([elide_f, camel_case_to_underscore, 
-                            substitutions])
-
 # Other global constants:
 
 UNDERSCORE_PATTERN = re.compile('(?<=[a-z])([A-Z])')
@@ -479,198 +456,7 @@ DOC_WRAPPER = textwrap.TextWrapper(
     fix_sentence_endings=False,
     break_long_words=True,
     )  # 2007 May 25
-SUBSTITUTE_FOR = {
-    'abday_1':'ABDAY_1',
-    'abday_2':'ABDAY_2',
-    'abday_3':'ABDAY_3',
-    'abday_4':'ABDAY_4',
-    'abday_5':'ABDAY_5',
-    'abday_6':'ABDAY_6',
-    'abday_7':'ABDAY_7',
-    'abmon_1':'ABMON_1',
-    'abmon_10':'ABMON_10',
-    'abmon_11':'ABMON_11',
-    'abmon_12':'ABMON_12',
-    'abmon_2':'ABMON_2',
-    'abmon_3':'ABMON_3',
-    'abmon_4':'ABMON_4',
-    'abmon_5':'ABMON_5',
-    'abmon_6':'ABMON_6',
-    'abmon_7':'ABMON_7',
-    'abmon_8':'ABMON_8',
-    'abmon_9':'ABMON_9',
-    'accel_group': 'AccelGroup',
-    'action_default': 'ACTION_DEFAULT',
-    'action_copy': 'ACTION_COPY',
-    'align_left': 'ALIGN_LEFT',
-    'align_right': 'ALIGN_RIGHT',
-    'align_center': 'ALIGN_CENTER',
-    'alignment': 'Alignment',
-    'button_press': 'BUTTON_PRESS',
-    'button_press_mask': 'BUTTON_PRESS_MASK',
-    'buttons_cancel': 'BUTTONS_CANCEL', 
-    'can_default': 'CAN_DEFAULT',
-    'can_focus': 'CAN_FOCUS',
-    'cell_renderer_pixbuf': 'CellRendererPixbuf',
-    'cell_renderer_text': 'CellRendererText',
-    'check_button': 'CheckButton',
-    'child_nodes': 'childNodes',
-    'color': 'Color',
-    'config_parser': 'ConfigParser',
-    'cursor': 'Cursor',
-    'day_1':'DAY_1',
-    'day_2':'DAY_2',
-    'day_3':'DAY_3',
-    'day_4':'DAY_4',
-    'day_5':'DAY_5',
-    'day_6':'DAY_6',
-    'day_7':'DAY_7',
-    'dest_default_all': 'DEST_DEFAULT_ALL',
-    'dialog_modal': 'DIALOG_MODAL', 
-    'dict_reader': 'DictReader', 
-    'dict_writer': 'DictWriter', 
-    'dir_tab_forward': 'DIR_TAB_FORWARD',
-    'dotall': 'DOTALL',
-    'dotall': 'DOTALL',
-    'enter_notify_mask': 'ENTER_NOTIFY_MASK',
-    'error': 'Error',
-    'event_box': 'EventBox', 
-    'expand': 'EXPAND',
-    'exposure_mask': 'EXPOSURE_MASK',
-    'file_selection': 'FileSelection',
-    'fill': 'FILL',
-    'ftp': 'FTP',
-    'get_attribute': 'getAttribute',
-    'gtk.button': 'Button',
-    'gtk.combo': 'Combo',
-    'gtk.dialog': 'Dialog',
-    'gtk.entry': 'Entry',
-    'pixmap': 'Pixmap',
-    'gtk.image': 'Image',
-    'gtk.label': 'Label',
-    'gtk.menu': 'Menu',
-    'gtk.pack_end': 'PACK_END',
-    'gtk.pack_start': 'PACK_START',
-    'gtk.vbox': 'VBox',
-    'gtk.window': 'Window',
-    'hand2': 'HAND2',
-    'hbox': 'HBox', 
-    'icon_size_button': 'ICON_SIZE_BUTTON', 
-    'icon_size_dialog': 'ICON_SIZE_DIALOG',
-    'icon_size_dnd': 'ICON_SIZE_DND',
-    'icon_size_large_toolbar': 'ICON_SIZE_LARGE_TOOLBAR',
-    'icon_size_menu': 'ICON_SIZE_MENU',
-    'icon_size_small_toolbar': 'ICON_SIZE_SMALL_TOOLBAR',
-    'image_menu_item': 'ImageMenuItem',
-    'item_factory': 'ItemFactory',
-    'justify_center': 'JUSTIFY_CENTER',
-    'justify_fill': 'JUSTIFY_FILL',
-    'justify_left': 'JUSTIFY_LEFT',
-    'justify_right': 'JUSTIFY_RIGHT',
-    'list_item': 'ListItem',
-    'list_store': 'ListStore',
-    'menu_bar': 'MenuBar',
-    'message_dialog': 'MessageDialog', 
-    'message_info': 'MESSAGE_INFO', 
-    'mon_1':'MON_1',
-    'mon_10':'MON_10',
-    'mon_11':'MON_11',
-    'mon_12':'MON_12',
-    'mon_2':'MON_2',
-    'mon_3':'MON_3',
-    'mon_4':'MON_4',
-    'mon_5':'MON_5',
-    'mon_6':'MON_6',
-    'mon_7':'MON_7',
-    'mon_8':'MON_8',
-    'mon_9':'MON_9',
-    'multiline': 'MULTILINE',
-    'node_type': 'nodeType',
-    'notebook': 'Notebook',
-    'o_creat': 'O_CREAT', 
-    'o_excl': 'O_EXCL',
-    'o_ndelay': 'O_NDELAY',
-    'o_rdwr': 'O_RDWR', 
-    'p_nowait':'P_NOWAIT',
-    'parsing_error': 'ParsingError',
-    'pointer_motion_mask': 'POINTER_MOTION_MASK',
-    'pointer_motion_hint_mask': 'POINTER_MOTION_HINT_MASK',
-    'policy_automatic': 'POLICY_AUTOMATIC',
-    'policy_never': 'POLICY_NEVER',
-    'radio_button': 'RadioButton',
-    'realized': 'REALIZED',
-    'relief_none': 'RELIEF_NONE',
-    'request':'Request',
-    'response_cancel': 'RESPONSE_CANCEL', 
-    'response_delete_event': 'RESPONSE_DELETE_EVENT',
-    'response_no': 'RESPONSE_NO',
-    'response_none': 'RESPONSE_NONE',
-    'response_ok': 'RESPONSE_OK', 
-    'response_yes': 'RESPONSE_YES',
-    'scrolled_window': 'ScrolledWindow',
-    'shadow_in': 'SHADOW_IN',
-    'sniffer': 'Sniffer', 
-    'sort_ascending': 'SORT_ASCENDING',
-    'sort_descending': 'SORT_DESCENDING',
-    'state_normal': 'STATE_NORMAL',
-    'stock_add': 'STOCK_ADD',
-    'stock_apply': 'STOCK_APPLY', 
-    'stock_bold': 'STOCK_BOLD',
-    'stock_cancel': 'STOCK_CANCEL',
-    'stock_close': 'STOCK_CLOSE',
-    'stock_convert': 'STOCK_CONVERT',
-    'stock_copy': 'STOCK_COPY',
-    'stock_cut': 'STOCK_CUT',
-    'stock_dialog_info': 'STOCK_DIALOG_INFO',
-    'stock_dialog_info': 'STOCK_DIALOG_INFO',
-    'stock_dialog_question': 'STOCK_DIALOG_QUESTION',
-    'stock_execute': 'STOCK_EXECUTE', 
-    'stock_find': 'STOCK_FIND',
-    'stock_find_and_replace': 'STOCK_FIND_AND_REPLACE',
-    'stock_go_back': 'STOCK_GO_BACK',
-    'stock_go_forward': 'STOCK_GO_FORWARD',
-    'stock_help': 'STOCK_HELP',
-    'stock_index': 'STOCK_INDEX',
-    'stock_jump_to': 'STOCK_JUMP_TO',
-    'stock_new': 'STOCK_NEW',
-    'stock_no': 'STOCK_NO',
-    'stock_ok': 'STOCK_OK',
-    'stock_open': 'STOCK_OPEN',
-    'stock_paste': 'STOCK_PASTE',
-    'stock_preferences': 'STOCK_PREFERENCES',
-    'stock_print_preview': 'STOCK_PRINT_PREVIEW',
-    'stock_quit': 'STOCK_QUIT',
-    'stock_refresh': 'STOCK_REFRESH',
-    'stock_remove': 'STOCK_REMOVE',
-    'stock_save': 'STOCK_SAVE',
-    'stock_save_as': 'STOCK_SAVE_AS',
-    'stock_yes': 'STOCK_YES',
-    'string_io': 'StringIO',
-    'style_italic': 'STYLE_ITALIC',
-    'sunday': 'SUNDAY',
-    'tab': 'Tab',
-    'tab_array': 'TabArray',
-    'tab_left': 'TAB_LEFT',
-    'table': 'Table',
-    'target_same_app': 'TARGET_SAME_APP',
-    'target_same_widget': 'TARGET_SAME_WIDGET',
-    'text_iter': 'TextIter',
-    'text_node': 'TEXT_NODE',
-    'text_tag': 'TextTag',
-    'text_view': 'TextView',
-    'text_window_text': 'TEXT_WINDOW_TEXT',
-    'text_window_widget': 'TEXT_WINDOW_WIDGET',
-    'text_wrapper':'TextWrapper',
-    'tooltips': 'Tooltips', 
-    'tree_view': 'TreeView',
-    'tree_view_column': 'TreeViewColumn',
-    'type_string': 'TYPE_STRING',
-    'underline_single': 'UNDERLINE_SINGLE',
-    'weight_bold': 'WEIGHT_BOLD',
-    'window_toplevel': 'WINDOW_TOPLEVEL', 
-    'wrap_none': 'WRAP_NONE',
-    'wrap_word': 'WRAP_WORD',
-    }
+
 
 
 def force_quote(encoded, double=True, quoted=True):  # 2007 May 01
@@ -1079,8 +865,8 @@ class OutputUnit(object):
             result = None
         return result
 
-    def inc_margin(self):
-        self.margin += INDENTATION
+    def inc_margin(self, factor=1):
+        self.margin += INDENTATION * factor
         return self
 
     def dec_margin(self):
@@ -1234,8 +1020,9 @@ class Comments(dict):
                 except:
                     pass
         self.prev_lineno = -2  # 2010 Mar 10
-        self[self.prev_lineno] = (NA, SHEBANG)  # 2007 May 25
-        self[NA] = (NA, CODING_SPEC)  # 2007 May 25
+#        Dont want to add SHEBANG at the top of the file, hence commenting.
+#        self[self.prev_lineno] = (NA, SHEBANG)  # 2007 May 25
+#        self[NA] = (NA, CODING_SPEC)  # 2007 May 25
         return 
 
     def merge(self, lineno=None, fin=False):
@@ -1774,8 +1561,8 @@ class Node(object):
     def get_hi_lineno(self):
         return self.get_lineno()
 
-    def inc_margin(self):
-        OUTPUT.inc_margin()
+    def inc_margin(self, factor=1):
+        OUTPUT.inc_margin(factor)
         return self
 
     def dec_margin(self):
@@ -2012,9 +1799,9 @@ class NodeAdd(NodeOprAssoc):  # 2010 Mar 10
 
     def put(self, can_split=False):
         self.put_expr(self.left, can_split=can_split)
-        self.line_more(SPACE, can_split_after=can_split, can_break_after=True)  # 2007 May 23
+        self.line_more(SPACE, can_split_after=True)  # 2007 May 23
         self.line_more('+ ')
-        self.put_expr(self.right, can_split=can_split)
+        self.put_expr(self.right, can_split=True)
         return self
 
     def get_hi_lineno(self):
@@ -2107,7 +1894,7 @@ class NodeAsgList(Node):
         self.line_more('[', tab_set=True)
         if len(self.nodes) > MAX_SEPS_SERIES:  # 2007 May 24
             self.line_term()
-            self.inc_margin()
+            self.inc_margin(2)
             for node in self.nodes:
                 self.line_init()
                 node.put(can_split=True)
@@ -2297,7 +2084,7 @@ class NodeAssign(Node):
             else:
                 node.put(can_split=can_split)
             self.line_more(ASSIGNMENT, can_break_after=True)
-        if isinstance(self.expr, NodeYield):  # 2006 Dec 13
+        if isinstance(self.expr, NodeYield) or isinstance(self.expr, NodeAdd):  # 2006 Dec 13
             self.line_more('(')
             self.expr.put(can_split=True)
             self.line_more(')')
@@ -2337,7 +2124,12 @@ class NodeAugAssign(Node):
         self.node.put(can_split=can_split)
         op = ASSIGNMENT.replace('=', self.op.get_as_str())
         self.line_more(op, can_break_after=True)
-        self.expr.put(can_split=can_split)
+        if isinstance(self.expr, NodeAdd):  # 2006 Dec 13
+            self.line_more('(')
+            self.expr.put(can_split=True)
+            self.line_more(')')
+        else:
+            self.expr.put(can_split=can_split)
         self.line_term()
         return self
 
